@@ -34,15 +34,15 @@ def get_MARTS_data(api_key='', date_from='2000', date_to=str(date.today().year))
     df=pd.DataFrame(data[1:], columns=data[0])
     return df
 
-def clean_retail_sales_data(df, seasonally_adj='yes', on_report=True, category=get_category()):
+def clean_retail_sales_data(df, seasonally_adj='yes', category=get_category()):
     print('Transform and Pivot Data.')
     df['on_report'] = df['category_code'].replace(category['on_report'])
     df['short'] = df['category_code'].replace(category['short'])
     df['long'] = df['category_code'].replace(category['long'])
-    if on_report:
-        x = df.loc[(df['data_type_code'] == 'SM') & (df['seasonally_adj']==seasonally_adj) & (df['on_report'] == 'yes')][['short','cell_value','time']]
-    else:
-        x = df.loc[(df['data_type_code'] == 'SM') & (df['seasonally_adj']==seasonally_adj)][['short','cell_value','time']]
+    # if on_report:
+        # x = df.loc[(df['data_type_code'] == 'SM') & (df['seasonally_adj']==seasonally_adj) & (df['on_report'] == 'yes')][['short','cell_value','time']]
+    # else:
+    x = df.loc[(df['data_type_code'] == 'SM') & (df['seasonally_adj']==seasonally_adj)][['short','cell_value','time']]
     x['cell_value'] = x['cell_value'].astype(int)
     x['Date'] = pd.to_datetime(x['time'],format='%Y-%m').dt.date
     # x['year'] = pd.DatetimeIndex(x['time']).year
@@ -79,7 +79,7 @@ st.set_page_config(
 
 hide_menu_style = """
         <style>
-        #MainMenu {visibility: hidden;}
+        
         footer {visibility: hidden;}
         </style>
         """
