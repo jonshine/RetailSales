@@ -53,7 +53,7 @@ def clean_retail_sales_data(df, seasonally_adj='yes', category=get_category()):
 
 def gen_ohlc(MARTS):
     ohlc = pd.DataFrame()
-    df_pct = df.pct_change().tail(13)
+    df_pct = MARTS.pct_change().tail(13)
     ohlc['Level'] = MARTS.iloc[-1]
     ohlc['Open'] = df_pct.iloc[1]
     ohlc['High'] = df_pct.max()
