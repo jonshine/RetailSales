@@ -51,6 +51,16 @@ def clean_retail_sales_data(df, seasonally_adj='yes', category=get_category()):
     print('> Done!\n')
     return x['cell_value']
 
+def gen_ohlc(MARTS):
+    ohlc = pd.DataFrame()
+    df_pct = df.pct_change().tail(13)
+    ohlc['Level'] = MARTS.iloc[-1]
+    ohlc['Open'] = df_pct.iloc[1]
+    ohlc['High'] = df_pct.max()
+    ohlc['Low'] = df_pct.min()
+    ohlc['Close'] = df_pct.iloc[-1]
+    return ohlc
+
 @st.cache
 def load_data():
     data = get_MARTS_data()
@@ -106,6 +116,7 @@ if st.session_state['download']:
     dfs['M-M Change'] = MARTS.diff(1)
     dfs['Y-Y Pct Change'] = MARTS.pct_change(12)
     dfs['Y-Y Change'] = MARTS.diff(12)
+    dfs['OHLC'] = gen_ohlc(MARTS)
     st.session_state['table'] = st.radio('Select Table', list(dfs))
     st.session_state['table_view'] = st.radio('Data to view.',['Most recent value.','All values.'])
     if st.session_state['table_view'] == 'Most recent value.':
