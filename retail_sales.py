@@ -55,6 +55,8 @@ def gen_ohlc(MARTS,window='MM'):
     ohlc = pd.DataFrame()
     if window == 'MM':
         df_pct = MARTS.pct_change(1).tail(13)
+    elif window == 'QQ':
+        df_pct = MARTS.pct_change(3).tail(13)
     elif window == 'YY':
         df_pct = MARTS.pct_change(12).tail(13)
     ohlc['Level'] = MARTS.iloc[-1]
@@ -117,9 +119,12 @@ if st.session_state['download']:
     dfs['Retail Sales'] = MARTS
     dfs['M-M Pct Change'] = MARTS.pct_change(1)
     dfs['M-M Change'] = MARTS.diff(1)
+    dfs['Y-Y Pct Change'] = MARTS.pct_change(3)
+    dfs['Y-Y Change'] = MARTS.diff(3)
     dfs['Y-Y Pct Change'] = MARTS.pct_change(12)
-    dfs['Y-Y Change'] = MARTS.diff(12)
+    dfs['Y-Y Change'] = MARTS.diff(12)    
     dfs['OHLC MM'] = gen_ohlc(MARTS,window = 'MM')
+    dfs['OHLC MM'] = gen_ohlc(MARTS,window = 'QQ')
     dfs['OHLC YY'] = gen_ohlc(MARTS,window = 'YY')
     st.session_state['table'] = st.radio('Select Table', list(dfs))
     st.session_state['table_view'] = st.radio('Data to view.',['Most recent value.','All values.'])
